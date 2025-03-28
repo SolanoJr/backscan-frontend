@@ -8,7 +8,11 @@ const path = require("path");
 const app = express();
 const PORT = process.env.PORT || 8088;
 
-app.use(cors());
+app.use(cors({
+    origin: "https://backscan-frontend.onrender.com", // Permite o frontend acessar
+    methods: ["GET", "POST"], // Métodos permitidos
+    allowedHeaders: ["Content-Type", "Authorization"] // Headers permitidos
+}));
 app.use(bodyParser.json());
 
 // Servir arquivos estáticos da pasta atual
