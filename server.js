@@ -3,10 +3,21 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const cors = require("cors");
 const axios = require("axios");
+const path = require("path");
 
 const app = express();
+const PORT = process.env.PORT || 8088;
+
 app.use(cors());
 app.use(bodyParser.json());
+
+// Servir arquivos estáticos da pasta atual
+app.use(express.static(__dirname));
+
+// Rota para o caminho raiz
+app.get("/", (req, res) => {
+  res.sendFile(path.join(__dirname, "index.html"));
+});
 
 const TELEGRAM_BOT_TOKEN = "7695856507:AAGGfqzY8-ujtB_oBvOJuXkjmIALTQYqq3I"; // Substitua pelo token do seu bot
 const TELEGRAM_CHAT_ID = "-1002496051487"; // Substitua pelo ID do chat (ou grupo) para onde quer enviar
@@ -31,6 +42,6 @@ app.post("/send-location", async (req, res) => {
   }
 });
 
-app.listen(8088, () => {
-  console.log("Servidor rodando na porta 8088");
+app.listen(PORT, () => {
+  console.log(`Servidor rodando na porta ${PORT}`);
 });
