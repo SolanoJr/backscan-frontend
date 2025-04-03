@@ -54,6 +54,28 @@ app.post("/send-location", async (req, res) => {
   }
 });
 
+// Nova rota para enviar localização ao Telegram
+app.post("/send-location-alt", async (req, res) => {
+    try {
+        const { latitude, longitude } = req.body;
+        const botToken = "SEU_BOT_TOKEN";
+        const chatId = "SEU_CHAT_ID";
+
+        const message = `📍 Localização recebida!\nLatitude: ${latitude}\nLongitude: ${longitude}`;
+        const url = `https://api.telegram.org/bot${botToken}/sendMessage`;
+
+        const response = await axios.post(url, {
+            chat_id: chatId,
+            text: message
+        });
+
+        res.status(200).json({ success: true, response: response.data });
+    } catch (error) {
+        console.error("Erro ao enviar mensagem ao bot:", error);
+        res.status(500).json({ success: false, error: error.message });
+    }
+});
+
 app.listen(PORT, () => {
   console.log(`Servidor rodando na porta ${PORT}`);
 });
