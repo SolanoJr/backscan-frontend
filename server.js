@@ -9,20 +9,15 @@ const PORT = process.env.PORT || 8088;
 
 app.use(express.json());
 
-// Configuração do CORS para permitir chamadas do frontend
-app.use(cors({
-    origin: "https://backscan-frontend.onrender.com", // URL do seu frontend
-    methods: ["GET", "POST"],
-    allowedHeaders: ["Content-Type", "Authorization"]
-}));
+// Configuração do CORS para aceitar requisições do frontend
+app.use(cors()); // Permite todas as origens
 
-// Middleware para garantir que todas as respostas tenham os headers de CORS
 app.use((req, res, next) => {
-    res.header("Access-Control-Allow-Origin", "https://backscan-frontend.onrender.com");
+    res.header("Access-Control-Allow-Origin", "*"); // Permite qualquer origem (teste geral)
     res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
     res.header("Access-Control-Allow-Headers", "Content-Type, Authorization");
     if (req.method === "OPTIONS") {
-        return res.sendStatus(204); // Responde imediatamente para requisições OPTIONS (preflight)
+        return res.sendStatus(204); // Responde imediatamente a requisições preflight
     }
     next();
 });
